@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le robot qui se perd</title>
+<style>
+  /* ===== 1. COULEURS : on les définit une seule fois, on les réutilise partout ===== */
+  :root {
+    --fond: #f6f4ef;
+    --carte: #ffffff;
+    --texte: #1f2430;
+    --discret: #5b6272;
+    --accent: #1f6f5c;       /* vert : bouton principal */
+    --accent-texte: #ffffff;
+    --alerte: #b4422f;       /* rouge brique : "pages utiles = 0" */
+    --bordure: #d9d5cb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fond: #14171d;
+      --carte: #1e222b;
+      --texte: #eceae4;
+      --discret: #a4a9b6;
+      --accent: #3fae93;
+      --accent-texte: #0f1512;
+      --alerte: #ec8b78;
+      --bordure: #343a47;
+    }
+  }
+
+  /* ===== 2. MISE EN PAGE DE BASE ===== */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--fond);
+    color: var(--texte);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 18px;          /* grand texte : lisible sur tablette et en atelier */
+    line-height: 1.5;
+  }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.9rem; margin: 0 0 4px; }
+  .sous-titre { color: var(--discret); margin: 0 0 20px; }
+
+  .carte {
+    background: var(--carte);
+    border: 1px solid var(--bordure);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* ===== 3. LE ROBOT ET SES BOUTONS ===== */
+  .robot-ligne { display: flex; align-items: center; gap: 14px; }
+  .robot { font-size: 3rem; line-height: 1; }
+  .robot.actif { animation: secoue 0.6s infinite alternate ease-in-out; }
+  @keyframes secoue { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
+  @media (prefers-reduced-motion: reduce) { .robot.actif { animation: none; } }
+  #statut { margin: 0; font-weight: 600; }
+
+  .boutons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  button {
+    min-height: 52px;          /* assez grand pour un doigt sur tablette */
+    padding: 0 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: 2px solid var(--accent);
+    cursor: pointer;
+    font-family: inherit;
+  }
+  #bouton-lancer { background: var(--accent); color: var(--accent-texte); }
+  #bouton-reset { background: transparent; color: var(--accent); }
+  button:focus-visible { outline: 3px solid var(--texte); outline-offset: 2px; }
+
+  /* ===== 4. LES COMPTEURS ===== */
+  .compteurs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .compteur { text-align: center; padding: 12px 6px; }
+  .compteur .nombre { display: block; font-size: 2rem; font-weight: 700; }
+  .compteur .nom { font-size: 0.85rem; color: var(--discret); }
+  .compteur.utile .nombre { color: var(--alerte); }
+
+  /* ===== 5. LES FAUSSES PAGES QUE LE ROBOT LIT ===== */
+  #flux { max-height: 340px; overflow-y: auto; }
+  .page-fausse {
+    border-left: 4px solid var(--bordure);
+    padding: 6px 0 6px 12px;
+    margin-bottom: 12px;
+  }
+  .page-fausse h3 { margin: 0; font-size: 1rem; }
+  .page-fausse p { margin: 2px 0 0; color: var(--discret); font-size: 0.95rem; }
+  .page-fausse .liens { font-size: 0.85rem; }
+  #vide { color: var(--discret); margin: 0; }
+
+  /* ===== 6. LA PARTIE EXPLICATION ===== */
+  h2 { font-size: 1.2rem; margin: 0 0 8px; }
+  ol { margin: 0; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  .attention { color: var(--discret); font-size: 0.95rem; margin: 10px 0 0; }
+
+  @media (max-width: 520px) {
+    .compteurs { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <h1>Le robot qui se perd</h1>
+  <p class="sous-titre">Comment piéger un robot qui copie des sites web pour entraîner une IA.</p>
+
+  <!-- Le robot, son message et les boutons -->
+  <section class="carte" aria-label="Commandes">
+    <div class="robot-ligne">
+      <div class="robot" id="robot" aria-hidden="true">🤖</div>
+      <p id="statut" aria-live="polite">Le robot attend devant le site.</p>
+    </div>
+    <div class="boutons">
+      <button id="bouton-lancer" type="button">Lancer le robot</button>
+      <button id="bouton-reset" type="button">Recommencer</button>
+    </div>
+  </section>
+
+  <!-- Les trois compteurs -->
+  <section class="compteurs" aria-label="Compteurs">
+    <div class="carte compteur">
+      <span class="nombre" id="n-pages">0</span>
+      <span class="nom">pages lues</span>
+    </div>
+    <div class="carte compteur">
+      <span class="nombre" id="n-mots">0</span>
+      <span class="nom">mots copiés</span>
+    </div>
+    <div class="carte compteur utile">
+      <span class="nombre">0</span>
+      <span class="nom">pages utiles trouvées</span>
+    </div>
+  </section>
+
+  <!-- Ce que lit le robot -->
+  <section class="carte" aria-label="Pages visitées par le robot">
+    <h2>Ce que le robot lit</h2>
+    <div id="flux">
+      <p id="vide">Appuie sur « Lancer le robot » pour voir ce qu'il trouve.</p>
+    </div>
+  </section>
+
+  <!-- L'explication pour le public -->
+  <section class="carte" aria-label="Explication">
+    <h2>Que se passe-t-il ?</h2>
+    <ol>
+      <li>Un robot visite un site et copie tous les textes qu'il trouve.</li>
+      <li>Ici, chaque page contient des liens vers d'autres fausses pages.</li>
+      <li>Le robot n'en sort jamais, et tout ce qu'il copie est sans valeur.</li>
+    </ol>
+    <p class="attention">C'est une démonstration simplifiée : un vrai piège se place sur un vrai site, et les visiteurs humains ne le voient pas.</p>
+  </section>
+
+</main>
+
+<script>
+  // ===== 1. LES MOTS POUR FABRIQUER DE FAUSSES PAGES =====
+  // Chaque liste sert à construire une phrase : sujet + verbe + complément.
+  const sujets = ["Le nuage carré", "La lune bleue", "Un renard lent", "Le pont de sucre", "Ma chaise voyageuse", "Le vent du lundi"];
+  const verbes = ["mange", "chante pour", "repeint", "oublie", "range", "salue"];
+  const complements = ["la soupe du jeudi", "trois montagnes tièdes", "une fenêtre timide", "le silence orange", "les horloges rondes", "un parapluie sans nom"];
+
+  // ===== 2. UN GÉNÉRATEUR DE HASARD "À GRAINE" =====
+  // Avec le même numéro de page, on obtient toujours la même fausse page.
+  function hasard(graine) {
+    let a = graine + 1;
+    return function () {
+      a = (a * 16807) % 2147483647;
+      return a / 2147483647;
+    };
+  }
+
+  // ===== 3. FABRIQUER UNE FAUSSE PAGE À PARTIR DE SON NUMÉRO =====
+  function fabriquerPage(numero) {
+    const alea = hasard(numero * 97);
+    const choisir = (liste) => liste[Math.floor(alea() * liste.length)];
+    const phrases = [];
+    for (let i = 0; i < 2; i++) {
+      phrases.push(choisir(sujets) + " " + choisir(verbes) + " " + choisir(complements) + ".");
+    }
+    // Chaque page renvoie vers 3 autres pages : il y en a donc toujours une suivante.
+    const liens = [numero * 3 + 1, numero * 3 + 2, numero * 3 + 3];
+    return { numero: numero, texte: phrases.join(" "), liens: liens };
+  }
+
+  // ===== 4. L'ÉTAT DU ROBOT =====
+  let numeroActuel = 1;      // la page où il se trouve
+  let pagesLues = 0;
+  let motsCopies = 0;
+  let minuteur = null;       // sert à répéter l'action toutes les 0,8 seconde
+
+  // On récupère les éléments de la page pour pouvoir les modifier
+  const boutonLancer = document.getElementById("bouton-lancer");
+  const boutonReset = document.getElementById("bouton-reset");
+  const flux = document.getElementById("flux");
+  const statut = document.getElementById("statut");
+  const robot = document.getElementById("robot");
+  const nPages = document.getElementById("n-pages");
+  const nMots = document.getElementById("n-mots");
+
+  // ===== 5. UNE VISITE : LE ROBOT LIT UNE PAGE ET SUIT UN LIEN =====
+  function visiter() {
+    const page = fabriquerPage(numeroActuel);
+
+    // On compte ce que le robot copie
+    pagesLues++;
+    motsCopies += page.texte.split(" ").length;
+    nPages.textContent = pagesLues;
+    nMots.textContent = motsCopies;
+    statut.textContent = "Le robot lit la page n°" + page.numero + "…";
+
+    // On enlève le message de départ la première fois
+    const vide = document.getElementById("vide");
+    if (vide) vide.remove();
+
+    // On affiche la fausse page en haut de la liste
+    const carte = document.createElement("article");
+    carte.className = "page-fausse";
+    carte.innerHTML =
+      "<h3>Page n°" + page.numero + "</h3>" +
+      "<p>" + page.texte + "</p>" +
+      "<p class='liens'>Liens : → page " + page.liens.join(" · → page ") + "</p>";
+    flux.prepend(carte);
+
+    // On garde seulement les 12 dernières pages à l'écran
+    while (flux.children.length > 12) {
+      flux.lastElementChild.remove();
+    }
+
+    // Le robot suit un des 3 liens au hasard : il ne sort jamais du piège
+    numeroActuel = page.liens[Math.floor(Math.random() * 3)];
+  }
+
+  // ===== 6. LES BOUTONS =====
+  function lancer() {
+    minuteur = setInterval(visiter, 800);
+    robot.classList.add("actif");
+    boutonLancer.textContent = "Arrêter le robot";
+    visiter();   // première visite tout de suite
+  }
+
+  function arreter() {
+    clearInterval(minuteur);
+    minuteur = null;
+    robot.classList.remove("actif");
+    boutonLancer.textContent = "Relancer le robot";
+    statut.textContent = "Le robot s'est arrêté. Il aurait pu continuer sans fin.";
+  }
+
+  boutonLancer.addEventListener("click", function () {
+    if (minuteur === null) { lancer(); } else { arreter(); }
+  });
+
+  boutonReset.addEventListener("click", function () {
+    if (minuteur !== null) { arreter(); }
+    numeroActuel = 1;
+    pagesLues = 0;
+    motsCopies = 0;
+    nPages.textContent = "0";
+    nMots.textContent = "0";
+    flux.innerHTML = "<p id='vide'>Appuie sur « Lancer le robot » pour voir ce qu'il trouve.</p>";
+    boutonLancer.textContent = "Lancer le robot";
+    statut.textContent = "Le robot attend devant le site.";
+  });
+</script>
+</body>
+</html>
