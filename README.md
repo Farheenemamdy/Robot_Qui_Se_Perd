@@ -114,22 +114,6 @@ Il arrête le robot, remet tous les compteurs à 0 et vide la liste.
    Pages utiles trouvées : toujours 0
    
 8. Petit glossaire
-Mot
-Ce que ça veut dire
-Robot (crawler)
-Un programme qui visite des sites web tout seul pour les copier
-Piège à robots
-Des pages créées pour faire perdre du temps au robot
-HTML
-Le langage qui décrit ce qu'il y a sur la page
-CSS
-Le langage qui décrit l'apparence
-JavaScript
-Le langage qui fait réagir la page
-Fonction
-Un petit programme avec un nom, qu'on peut rappeler
-id
-Le nom d'un élément, pour le retrouver
 
 <img width="798" height="408" alt="image" src="https://github.com/user-attachments/assets/1270c20f-e732-4304-9c19-03e9da33427e" />
 
