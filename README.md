@@ -16,14 +16,9 @@ C'est tout. Pas d'installation, pas d'internet nécessaire.
 
 5. Le fichier en 3 morceaux
 Tout est dans un seul fichier, index.html. Il contient 3 parties :
-┌─────────────────────────────────────────┐
-│  index.html                             │
-│                                         │
-│  🧱 HTML  →  le squelette (ce qu'il y a)│
-│  🎨 CSS   →  les habits (à quoi ça      │
-│              ressemble)                 │
-│  🧠 JS    →  le cerveau (ce que ça fait)│
-└─────────────────────────────────────────┘
+
+<img width="472" height="177" alt="image" src="https://github.com/user-attachments/assets/e62b9fdf-3c98-4da9-8e91-814bc8bc9b4e" />
+
 Une maison : le HTML = les murs, le CSS = la peinture, le JavaScript = l'électricité.
 
 7. 🧱 HTML : ce qu'il y a sur la page
