@@ -27,17 +27,9 @@ Tu n'as pas besoin de tout comprendre. Regarde juste à quoi sert chaque morceau
 
 ⭐ 4. 🧱 HTML : ce qu'on voit
 Voici la page, de haut en bas :
-┌───────────────────────────────┐
-│  Le robot qui se perd         │  ← le titre
-├───────────────────────────────┤
-│  🤖  [Lancer]  [Recommencer]  │  ← le robot et 2 boutons
-├───────────────────────────────┤
-│  pages lues | mots copiés | 0 │  ← 3 compteurs
-├───────────────────────────────┤
-│  Ce que le robot lit          │  ← les fausses pages
-├───────────────────────────────┤
-│  Que se passe-t-il ?          │  ← l'explication
-└───────────────────────────────┘
+
+<img width="797" height="239" alt="image" src="https://github.com/user-attachments/assets/64d14f11-fdb7-4519-8023-1a9d69f203ba" />
+
 À retenir : certains éléments ont un nom (un id).
 C'est comme une étiquette : le JavaScript s'en sert pour retrouver l'élément et le changer.
 
@@ -90,18 +82,9 @@ Recommencer : tout revient à 0.
 
 ⭐ 7. Le trajet du robot
    Tu appuies sur « Lancer »
-             │
-             ▼
-   ┌─────────────────────┐
-   │ Le robot lit une    │◄────────┐
-   │ fausse page         │         │
-   └─────────┬───────────┘         │
-             ▼                     │
-   Il copie les mots               │
-             ▼                     │
-   Il choisit un des 3 liens ──────┘
+   
+<img width="797" height="231" alt="image" src="https://github.com/user-attachments/assets/331f68ff-0c6f-4981-9e3d-6a2bf8edba8e" />
 
-   Pages utiles trouvées : toujours 0
    
 ⭐ 8. Petit glossaire
 
