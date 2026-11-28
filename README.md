@@ -43,13 +43,16 @@ Le robot se secoue quand il travaille. 🤖
 
 ⭐ 6. 🧠 JavaScript : ce que fait le cerveau
 On y va en 6 petites étapes.
+
 Étape 1 : les mots
 Trois listes de mots : des sujets, des verbes, des compléments.
 On prend un mot de chaque liste pour faire une phrase absurde :
  "Le nuage carré"  +  "mange"  +  "la soupe du jeudi"
+
 Étape 2 : le hasard
 Un hasard normal change à chaque fois.
 Ici, la page n°42 est toujours la même. On l'a prévu exprès.
+
 Étape 3 : fabriquer une fausse page
 On donne un numéro à une page. Elle te rend :
 2 phrases absurdes ;
@@ -60,6 +63,7 @@ La règle des liens est simple : numéro × 3, puis +1, +2, +3.
   page 13  →  pages 40, 41, 42
   ... et ça continue sans fin
 Il y a toujours une page suivante. Il n'y a jamais de dernière page.
+
 Étape 4 : la mémoire du robot
 Le robot retient 3 choses :
 Il retient
@@ -70,6 +74,7 @@ Combien de pages il a lues
 5
 Combien de mots il a copiés
 62
+
 Étape 5 : une visite
 À chaque visite, le robot fait 5 choses :
   1. 📄  Il fabrique la page
@@ -77,6 +82,7 @@ Combien de mots il a copiés
   3. 🖥️  Il l'affiche en haut de la liste
   4. 🧹  Il garde seulement les 12 dernières
   5. 🎲  Il choisit 1 des 3 liens et y va
+
 Étape 6 : les boutons
 Lancer : le robot fait une visite toutes les 0,8 seconde.
 Arrêter : il s'arrête. (C'est le même bouton.)
