@@ -1,7 +1,9 @@
 🤖 Le robot qui se perd
 
 Une petite page web qui montre comment on fait tourner un robot en rond.
+
 Chaque partie est courte. Tu peux t'arrêter après chacune. Chaque partie finie = ⭐
+
 ⭐ 1. L'idée
 Un robot copie les textes des sites web pour entraîner une IA.
 Ici, on lui tend un piège :
